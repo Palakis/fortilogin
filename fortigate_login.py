@@ -36,17 +36,22 @@ if rep.status == 303:
 	print "------"
 	
 	print "Authenticating as " + username
-	
+
+	# Step 1 - call the full URL return by the captive portal	
 	rep = urllib.urlopen(locationUrl)	
 	print "Step 1 : " + str(rep.getcode())
 
+	# Step 2 - send a POST request to the "Yes, I agree" form
 	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'answer': 1})
 	rep = urllib.urlopen(postUrl, params)
 	print "Step 2 : " + str(rep.getcode())
 
+	# Step 3 - send a POST request with your credentials to the Authentication form
 	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'username': username, 'password': password})
 	rep = urllib.urlopen(postUrl, params)
 	print "Step 3 : " + str(rep.getcode())
+
+	# The HTTP response of the third step should be your IP address returned by icanhazip.com
 	print "Final response (should be your public IP address) : " + rep.read()
 else:
 	print "Already authenticated"
