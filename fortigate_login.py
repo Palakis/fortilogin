@@ -37,7 +37,7 @@ if rep.status == 303:
 	
 	print "Authenticating as " + username
 
-	# Step 1 - call the full URL return by the captive portal	
+	# Step 1 - call the full URL returned by the captive portal	
 	rep = urllib.urlopen(locationUrl)	
 	print "Step 1 : " + str(rep.getcode())
 
