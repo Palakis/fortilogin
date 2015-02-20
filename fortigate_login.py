@@ -2,6 +2,7 @@
 import sys
 import httplib
 import urllib
+import ssl
 from urlparse import urlparse
 
 if len(sys.argv) < 3:
@@ -37,18 +38,21 @@ if rep.status == 303:
 	
 	print "Authenticating as " + username
 
+	# Used by urlopen calls to ignore SSL certification verification
+	gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+
 	# Step 1 - call the full URL returned by the captive portal	
-	rep = urllib.urlopen(locationUrl)	
+	rep = urllib.urlopen(locationUrl, context=gcontext)	
 	print "Step 1 : " + str(rep.getcode())
 
 	# Step 2 - send a POST request to the "Yes, I agree" form
 	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'answer': 1})
-	rep = urllib.urlopen(postUrl, params)
+	rep = urllib.urlopen(postUrl, params, context=gcontext)
 	print "Step 2 : " + str(rep.getcode())
 
 	# Step 3 - send a POST request with your credentials to the Authentication form
 	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'username': username, 'password': password})
-	rep = urllib.urlopen(postUrl, params)
+	rep = urllib.urlopen(postUrl, params, context=gcontext)
 	print "Step 3 : " + str(rep.getcode())
 
 	# The HTTP response of the third step should be your IP address returned by icanhazip.com
