@@ -12,9 +12,11 @@ if len(sys.argv) < 3:
 username = sys.argv[1]
 password = sys.argv[2]
 
+testHost = "ipv4.icanhazip.com"
+
 # Initial request to know if I'm behind a Fortinet captive portal
 # I'm using httplib to detect and avoid the automatic redirection performed by urllib
-conn = httplib.HTTPConnection('icanhazip.com')
+conn = httplib.HTTPConnection(testHost)
 conn.request('GET', '/')
 rep = conn.getresponse()
 
@@ -46,12 +48,12 @@ if rep.status == 303:
 	print "Step 1 : " + str(rep.getcode())
 
 	# Step 2 - send a POST request to the "Yes, I agree" form
-	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'answer': 1})
+	params = urllib.urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'answer': 1})
 	rep = urllib.urlopen(postUrl, params, context=gcontext)
 	print "Step 2 : " + str(rep.getcode())
 
 	# Step 3 - send a POST request with your credentials to the Authentication form
-	params = urllib.urlencode({'4Tredir': 'http://icanhazip.com', 'magic': magic, 'username': username, 'password': password})
+	params = urllib.urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'username': username, 'password': password})
 	rep = urllib.urlopen(postUrl, params, context=gcontext)
 	print "Step 3 : " + str(rep.getcode())
 
