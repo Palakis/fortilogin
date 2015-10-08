@@ -3,13 +3,14 @@ import sys
 import httplib
 import urllib2
 import ssl
+import re
 from urllib import urlencode
 from urlparse import urlparse
 from getpass import getpass
 
 # Show usage info and exit if not arguments are given
 if len(sys.argv) < 2:
-	print "Usage : " + __file__+ " username password"	
+	print "Usage : " + __file__+ " username [password]"
 	exit()
 
 username = sys.argv[1]
@@ -20,7 +21,9 @@ if len(sys.argv) >= 3:
 else:
 	password = getpass('Password for ' + username + ':')
 
+# The script will try to match testRegex against the data returned by testHost
 testHost = "ipv4.icanhazip.com"
+testRegex = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$\n" # ICHI has a line return after the IP address 
 
 # Initial request to know if I'm behind a Fortinet captive portal
 # I'm using httplib to detect and avoid the automatic redirection performed by urllib
@@ -60,7 +63,11 @@ if rep.status == 303:
 	rep = urllib2.urlopen(postUrl, urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'username': username, 'password': password}))
 	print "Step 3 : " + str(rep.getcode())
 
-	# The HTTP response of the third step should be your IP address returned by icanhazip.com
-	print "Final response (should be your public IP address) : " + rep.read()
+	testResponse = rep.read()
+	if re.compile(testRegex).match(testResponse) != None:
+		print "Authenticated !"
+	else:
+		print "Seems like something went wrong. Here's what I received :\n"
+		print testReponse
 else:
 	print "Already authenticated"
