@@ -19,7 +19,7 @@ username = sys.argv[1]
 if len(sys.argv) >= 3:
 	password = sys.argv[2]
 else:
-	password = getpass('Password for ' + username + ':')
+	password = getpass('Password for ' + username + ' :')
 
 # The script will try to match testRegex against the data returned by testHost
 testHost = "ipv4.icanhazip.com"
