@@ -5,13 +5,20 @@ import urllib2
 import ssl
 from urllib import urlencode
 from urlparse import urlparse
+from getpass import getpass
 
-if len(sys.argv) < 3:
+# Show usage info and exit if not arguments are given
+if len(sys.argv) < 2:
 	print "Usage : " + __file__+ " username password"	
 	exit()
 
 username = sys.argv[1]
-password = sys.argv[2]
+
+# Get the password from the arguments if specified, prompt for it otherwise
+if len(sys.argv) >= 3:
+	password = sys.argv[2]
+else:
+	password = getpass('Password for ' + username + ':')
 
 testHost = "ipv4.icanhazip.com"
 
