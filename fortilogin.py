@@ -42,6 +42,10 @@ if rep.status == 303:
 
 	postUrl = portalUrl.scheme + "://" + portalUrl.netloc + "/"
 
+	ssl_ctx = ssl.create_default_context()
+	ssl_ctx.check_hostname = False
+	ssl_ctx.verify_mode = ssl.CERT_NONE
+
 	print "Not authenticated !"
 	print "Redirected to " + locationUrl
 	print "------"
@@ -52,15 +56,15 @@ if rep.status == 303:
 	print "Authenticating as " + username
 
 	# Step 1 - call the full URL returned by the captive portal	
-	rep = urllib2.urlopen(locationUrl)	
+	rep = urllib2.urlopen(locationUrl, context=ssl_ctx)	
 	print "Step 1 : " + str(rep.getcode())
 
 	# Step 2 - send a POST request to the "Yes, I agree" form
-	rep = urllib2.urlopen(postUrl, urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'answer': 1}))
+	rep = urllib2.urlopen(postUrl, urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'answer': 1}), context=ssl_ctx)
 	print "Step 2 : " + str(rep.getcode())
 
 	# Step 3 - send a POST request with your credentials to the Authentication form
-	rep = urllib2.urlopen(postUrl, urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'username': username, 'password': password}))
+	rep = urllib2.urlopen(postUrl, urlencode({'4Tredir': 'http://' + testHost, 'magic': magic, 'username': username, 'password': password}), context=ssl_ctx)
 	print "Step 3 : " + str(rep.getcode())
 
 	testResponse = rep.read()
@@ -68,6 +72,6 @@ if rep.status == 303:
 		print "Authenticated !"
 	else:
 		print "Seems like something went wrong. Here's what I received :\n"
-		print testReponse
+		print testResponse
 else:
 	print "Already authenticated"
