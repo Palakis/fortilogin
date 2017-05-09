@@ -1,5 +1,5 @@
 #    fortilogin.py
-#    Copyright (C) 2015 Stéphane Lepin
+#    Copyright (C) 2015 Stephane Lepin
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
