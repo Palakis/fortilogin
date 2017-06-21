@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 #    fortilogin.py
 #    Copyright (C) 2015 Stephane Lepin
 #
@@ -14,7 +16,6 @@
 #    You should have received a copy of the GNU General Public License along
 #    with this program. If not, see <https://www.gnu.org/licenses/>
 
-#!/usr/bin/env python
 import sys
 import httplib
 import urllib2
